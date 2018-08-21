@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  proxy:
+    image: proxy:latest
+    build:
+      context: .
+    volumes:
+      - ./data/ssl/etc:/tls
+      - ./log/nginx:/var/log/nginx
+    ports:
+      - 80:80
+    network_mode: "host"

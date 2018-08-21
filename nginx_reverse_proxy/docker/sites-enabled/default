@@ -1,0 +1,36 @@
+server{
+	listen 80 default_server;
+
+	server_name example.com;
+
+    # letsencrypt
+    location /.well-known/ {
+        default_type "text/plain";
+        alias /var/www/letsencrypt/;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server{
+	listen 443 default_server ssl http2;
+	listen [::]:443 default_server ssl http2;
+
+	server_name example.com;
+
+	ssl_certificate      /tls/live/example.com/fullchain.pem;
+	ssl_certificate_key  /tls/live/example.com/privkey.pem;
+
+	include /etc/nginx/include/ssl.conf;
+
+	location / {
+    # reverse proxy to other host
+ 		proxy_pass http://localhost:50080;
+    # translate back to our host
+		proxy_redirect http://localhost:443 /;
+
+    include /etc/nginx/include/ssl_proxy.conf;
+	}
+}
