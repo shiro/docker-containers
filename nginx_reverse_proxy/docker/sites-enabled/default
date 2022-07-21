@@ -37,7 +37,7 @@ server {
     proxy_intercept_errors on;
 	}
 
-  error_page 502 /maintenance.html;
+  error_page 502 =500 /maintenance.html;
   location = /maintenance.html {
     root   /var/www;
   }
